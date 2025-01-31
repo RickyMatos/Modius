@@ -1,0 +1,427 @@
+// import { VerticalBox, StandardListView, Button } from "std-widgets.slint";
+// import { Slider } from "std-widgets.slint";
+
+
+// //export component Slider inherits Rectangle {
+//     in property <float> value;
+//     callback changed(float);
+
+//     width: 100%;
+//     height: 10px;
+//     background: red;
+//     border-radius: 4px;
+
+//     Rectangle {
+//         width: parent.width * value;
+//         height: parent.height;
+//         background: #888888;
+//         border-radius: 4px;
+//     }
+
+//     TouchArea {
+//         width: parent.width;
+//         height: parent.height;
+
+//         clicked => {
+//             changed(self.mouse-x / self.width);
+//         }
+//     }
+// //}
+
+// // export component ProgressSlider inherits Rectangle {
+// //     in property <float> value;
+// //     callback changed(float);
+
+// //     width: 100%;
+// //     height: 10px;
+// //     background: red;
+// //     border-radius: 4px;
+
+// //     Rectangle {
+// //         width: parent.width * value;
+// //         height: parent.height;
+// //         background: #888888;
+// //         border-radius: 4px;
+// //     }
+
+// //     TouchArea {
+// //         width: parent.width;
+// //         height: parent.height;
+
+// //         clicked => {
+// //             changed(self.mouse-x / self.width);
+// //         }
+// //     }
+// // }
+
+// // component VolumeSlider inherits Rectangle {
+// //     callback changed(float);
+// //     in property <float> value;
+
+// //     width: 48px;
+// //     height: 120px;
+// //     background: #2a2a2a;
+// //     border-radius: 4px;
+
+// //     HorizontalLayout {
+// //         padding: 8px;
+// //         alignment: center;
+
+// //         Slider {
+// //             width: 24px;
+// //             height: parent.height;
+// //             orientation: vertical;
+// //             value: root.value;
+// //             minimum: 0;
+// //             maximum: 1;
+
+// //             changed(val) => {
+// //                 root.changed(val);
+// //             }
+// //         }
+// //     }
+// // }
+// //
+// component VolumeControl {
+//     in property <float> value;
+//     callback changed(float);
+
+//     Rectangle {
+//         width: 48px;
+//         height: 120px;
+//         background: #2a2a2a;
+//         border-radius: 4px;
+
+//         HorizontalLayout {
+//             alignment: center;
+//             padding: 8px;
+
+//             Rectangle {
+//                 width: 4px;
+//                 height: 100%;
+//                 background: #444444;
+//                 border-radius: 2px;
+
+//                 Rectangle {
+//                     width: parent.width;
+//                     height: parent.height * root.value;
+//                     y: parent.height * (1 - root.value);
+//                     background: @linear-gradient(180deg, #4CAF50, #8BC34A);
+//                     border-radius: 2px;
+//                     animate height { duration: 200ms; easing: ease-in-out; }
+//                     animate y { duration: 200ms; easing: ease-in-out; }
+//                 }
+
+//                 // Indicador (bolinha)
+//                 Rectangle {
+//                     width: 12px;
+//                     height: 12px;
+//                     border-radius: 6px;
+//                     background: white;
+//                     x: -4px;
+//                     y: clamp(0px, parent.height * (1 - root.value) - self.height / 2, parent.height - self.height);
+//                     animate y { duration: 200ms; easing: ease-in-out; }
+//                 }
+//             }
+//         }
+
+//         TouchArea {
+//             width: parent.width;
+//             height: parent.height - 16px;
+//             y: 8px;
+
+//             moved => {
+//                 if (self.pressed) {
+//                     root.changed(1 - clamp(0, self.mouse-y / self.height, 1));
+//                 }
+//             }
+
+//             clicked => {
+//                 root.changed(1 - clamp(0, self.mouse-y / self.height, 1));
+//             }
+//         }
+//     }
+// }
+
+// export component MainWindow inherits Window {
+//     width: 400px;
+//     height: 400px;
+
+//     // Properties
+//     in property <string> current-time: "00:00";
+//     in property <string> total-time: "00:00";
+//     in property <bool> is-playing: false;
+//     in property <int> repeat-mode: 0;
+//     in property <float> progress: 0;
+//     in property <float> volume: 1.0;
+//     in property <bool> is-muted: false;
+//     in-out property <bool> volume-slider-visible: false;
+
+//     // Callbacks
+//     callback open-file-manager();
+//     callback play-clicked();
+//     callback next-clicked();
+//     callback previous-clicked();
+//     callback repeat-clicked();
+//     callback time-selected(float);
+//     callback volume-changed(float);
+//     callback mute-toggled();
+
+//     Rectangle {
+//         width: parent.width;
+//         height: parent.height;
+//         background: black;
+//         border-radius: 3px;
+
+//         VerticalLayout {
+//             width: parent.width;
+//             height: parent.height;
+
+//                 // Área superior com o botão playlist
+//                 HorizontalLayout {
+//                 height: 68px;
+//                 padding: 10px;
+
+//                 Rectangle {
+//                     background: transparent;
+//                     horizontal-stretch: 1;
+//                 }
+
+//                 TouchArea {
+//                     width: 48px;
+//                     height: 48px;
+
+//                     Rectangle {
+//                         width: parent.width;
+//                         height: parent.height;
+//                         background: transparent;
+
+//                         Image {
+//                             source: @image-url("assets/playlist.svg");
+//                             width: 24px;
+//                             height: 24px;
+//                             horizontal-alignment: center;
+//                             vertical-alignment: center;
+//                         }
+//                     }
+
+//                     clicked => {
+//                         open-file-manager();
+//                     }
+//                 }
+//             }
+
+//             // Área do ícone central
+//             Rectangle {
+//                 height: 170px;
+//                 background: transparent;
+
+//                 Image {
+//                     source: @image-url("assets/music_player_icon_240x240.png");
+//                     width: 220px;
+//                     height: 220px;
+//                     horizontal-alignment: center;
+//                     vertical-alignment: center;
+//                 }
+//             }
+
+//             Rectangle {
+//                 background: transparent;
+//                 vertical-stretch: 1;
+//             }
+
+//                 // Barra de progresso e tempos
+//                 VerticalLayout {
+//                 height: 38px;
+//                 padding-left: 16px;
+//                 padding-right: 16px;
+//                 padding-top: 12px;
+//                 padding-bottom: 12px;
+//                 spacing: 6px;
+//                 alignment: center;
+
+//                 Text {
+//                     text: root.current-time + " / " + root.total-time;
+//                     color: white;
+//                     font-size: 12px;
+//                     horizontal-alignment: center;
+//                 }
+
+//                 HorizontalLayout { // Adiciona um HorizontalLayout para centralizar
+//                         alignment: center; // Centraliza horizontalmente
+//                         height: 10px;
+
+//                     Slider {
+//                         width: 260px;
+//                         value: root.progress;
+//                         changed(value) => {
+//                             root.time-selected(value);
+//                         }
+//                     }
+//                 }
+//             }
+
+//             Rectangle {
+//                 background: transparent;
+//                 vertical-stretch: 1;
+//                 height: 25px;
+//             }
+
+//             HorizontalLayout {
+//                 height: 68px;
+//                 padding-left: 16px;
+//                 padding-right: 16px;
+//                 spacing: 0;
+//                 //alignment: center;
+
+//                 // Volume control
+//                 TouchArea {
+//                     width: 48px;
+//                     height: 48px;
+
+//                     Rectangle {
+//                         width: parent.width;
+//                         height: parent.height;
+//                         background: transparent;
+//                         border-radius: 5px;
+
+//                         Image {
+//                             source: root.is-muted ? @image-url("assets/volume_off.svg") : root.volume > 0.5 ? @image-url("assets/volume_up.svg") : @image-url("assets/volume_down.svg");
+//                             width: 24px;
+//                             height: 24px;
+//                             horizontal-alignment: center;
+//                             vertical-alignment: center;
+//                         }
+//                     }
+
+//                     clicked => {
+//                         root.volume-slider-visible = !root.volume-slider-visible;
+//                     }
+
+//                     if root.volume-slider-visible:
+//                     VolumeControl {
+//                             x: 0px;
+//                             y: -130px;
+//                             value: root.volume;
+//                             changed(val) => {
+//                                 root.volume-changed(val);
+//                             }
+//                     }
+
+//                 Rectangle {
+//                     background: transparent;
+//                     horizontal-stretch: 0.5;
+//                 }
+
+//                 // Controles centrais
+//                 HorizontalLayout {
+//                     spacing: 16px;
+//                     alignment: center;
+//                     horizontal-stretch: 2;
+
+//                     TouchArea {
+//                         width: 48px;
+//                         height: 48px;
+
+//                         Rectangle {
+//                             width: parent.width;
+//                             height: parent.height;
+//                             background: transparent;
+//                             border-radius: 5px;
+
+//                             Image {
+//                                 source: @image-url("assets/skip_previous.svg");
+//                                 width: 24px;
+//                                 height: 24px;
+//                                 horizontal-alignment: center;
+//                                 vertical-alignment: center;
+//                             }
+//                         }
+
+//                         clicked => {
+//                             previous-clicked();
+//                         }
+//                     }
+
+//                     TouchArea {
+//                         width: 48px;
+//                         height: 48px;
+
+//                         Rectangle {
+//                             width: parent.width;
+//                             height: parent.height;
+//                             background: transparent;
+//                             border-radius: 5px;
+
+//                             Image {
+//                                 source: @image-url("assets/play_circle.svg");
+//                                 width: 24px;
+//                                 height: 24px;
+//                                 horizontal-alignment: center;
+//                                 vertical-alignment: center;
+//                             }
+//                         }
+
+//                         clicked => {
+//                             play-clicked();
+//                         }
+//                     }
+
+//                     TouchArea {
+//                         width: 48px;
+//                         height: 48px;
+
+//                         Rectangle {
+//                             width: parent.width;
+//                             height: parent.height;
+//                             background: transparent;
+//                             border-radius: 5px;
+
+//                             Image {
+//                                 source: @image-url("assets/skip_next.svg");
+//                                 width: 24px;
+//                                 height: 24px;
+//                                 horizontal-alignment: center;
+//                                 vertical-alignment: center;
+//                             }
+//                         }
+
+//                         clicked => {
+//                             next-clicked();
+//                         }
+//                     }
+//                 }
+
+//                 Rectangle {
+//                     background: transparent;
+//                     horizontal-stretch: 0.5;
+//                 }
+
+//                 // Botão repeat
+//                 TouchArea {
+//                     width: 48px;
+//                     height: 48px;
+
+//                     Rectangle {
+//                         width: parent.width;
+//                         height: parent.height;
+//                         background: transparent;
+//                         border-radius: 5px;
+
+//                         Image {
+//                             source: @image-url("assets/refresh.svg");
+//                             width: 24px;
+//                             height: 24px;
+//                             horizontal-alignment: center;
+//                             vertical-alignment: center;
+//                         }
+//                     }
+
+//                     clicked => {
+//                         repeat-clicked();
+//                     }
+//                 }
+//             }
+//         }
+//     }
+// }
