@@ -1,1 +1,1 @@
-pub mod interface;
+pub mod rust;

@@ -1,3 +1,19 @@
 [build]
 target = "x86_64-unknown-linux-gnu"
-rustflags = ["-C", "target-cpu=native", "-C", "link-arg=-fuse-ld=mold"]
+
+[target.x86_64-unknown-linux-gnu]
+linker = "clang"
+
+rustflags = [
+    # Otimizações específicas para sua CPU (Ryzen 7 5700U)
+    "-C",
+    "target-cpu=native",
+
+    # Força uso do linker LLD via clang (mais rápido e BOLT-friendly)
+    "-C",
+    "link-arg=-fuse-ld=mold",
+
+    "-C",
+    "link-arg=-Wl,--build-id=none",
+
+]

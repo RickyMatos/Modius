@@ -1,0 +1,28 @@
+//scr/ui/slider.slint
+/*------Componente Slider------*/
+export component Slider inherits Rectangle {
+    in property <float> value;
+    callback changed(float);
+
+    width: 100%;
+    height: 10px;
+    background: red;
+    border-radius: 4px;
+
+    Rectangle {
+        width: parent.width * value;
+        height: parent.height;
+        background: #888888;
+        border-radius: 4px;
+    }
+
+    TouchArea {
+        width: parent.width;
+        height: parent.height;
+
+        clicked => {
+            changed(self.mouse-x / self.width);
+        }
+    }
+}
+ /*------Fim do Slider------*/

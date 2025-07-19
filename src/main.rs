@@ -6,6 +6,6 @@ slint::include_modules!(); // Inclui os módulos do Slint
 use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    ui::interface::gui()?; // Chama a função 'gui' que configura a interface
+    ui::rust::interface::gui()?; // Chama a função 'gui' que configura a interface
     Ok(())
 }

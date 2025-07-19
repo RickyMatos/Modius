@@ -6,18 +6,32 @@ authors = ["Rychards Matos <rychardsmatos@protonmail.com>"]
 license = "MIT"
 readme = "README.md"
 
+[profile.dev]
+opt-level = 0              # Otimiza levemente sem sacrificar tempo de compilação (0 = nada, 1 = leve)
+debug = true               # Gera símbolos de debug
+split-debuginfo = 'packed' # (Linux/macOS): arquivos .dSYM separados — menor binário principal
+overflow-checks = true     # Verificações de overflow em tempo de execução
+incremental = true         # Compilação incremental ativada
+debug-assertions = true    # Mantém asserts (útil para detectar bugs)
+
 [profile.release]
 opt-level = 3
 debug = false
 lto = "fat"
 codegen-units = 1
 panic = "abort"
-strip = "symbols"
+strip = "none"
 
 [dependencies]
 rfd = "0.15"
-rodio = "0.20"
-slint = "1.11"
+rodio = "0.20.1"
+slint = { version = "1.12", default-features = false, features = [
+    "backend-winit-wayland", # Backend gráfico exclusivo Wayland
+    "renderer-femtovg-wgpu", # renderização via Vulkan
+    "compat-1-2",
+] }
+symphonia = "0.5.4"
+
 
 [build-dependencies]
-slint-build = "1.11"
+slint-build = "1.12"

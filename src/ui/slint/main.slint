@@ -1,105 +1,6 @@
-//scr/ui/main.slint
-import { Slider } from "std-widgets.slint";
-
-/*------Componente Slider------*/
-export component Slider inherits Rectangle {
-    in property <float> value;
-    callback changed(float);
-
-    width: 100%;
-    height: 10px;
-    background: red;
-    border-radius: 4px;
-
-    Rectangle {
-        width: parent.width * value;
-        height: parent.height;
-        background: #888888;
-        border-radius: 4px;
-    }
-
-    TouchArea {
-        width: parent.width;
-        height: parent.height;
-
-        clicked => {
-            changed(self.mouse-x / self.width);
-        }
-    }
-}
-
-component VolumeSlider inherits Rectangle {
-    callback changed(float);
-    in property <float> value;
-
-    width: 48px;
-    height: 120px;
-    background: #2a2a2a;
-    border-radius: 4px;
-
-    HorizontalLayout {
-        alignment: center;
-        padding: 8px;
-
-        Rectangle {
-            width: 4px;
-            height: 100%;
-            background: #444444;
-            border-radius: 2px;
-
-            Rectangle {
-                width: parent.width;
-                height: parent.height * root.value;
-                y: parent.height * (1 - root.value);
-                background: @linear-gradient(180deg, #4CAF50, #8BC34A);
-                border-radius: 2px;
-
-                animate height {
-                    duration: 200ms;
-                    easing: ease-in-out;
-                }
-                animate y {
-                    duration: 200ms;
-                    easing: ease-in-out;
-                }
-            }
-
-            Rectangle {
-                width: 12px;
-                height: 12px;
-                border-radius: 6px;
-                background: white;
-                x: -4px;
-                y: clamp(0px, parent.height * (1 - root.value) - self.height / 2, parent.height - self.height);
-
-                animate y {
-                    duration: 200ms;
-                    easing: ease-in-out;
-                }
-            }
-        }
-    }
-
-    TouchArea {
-        property <float> current-value: 0;
-        width: parent.width;
-        height: parent.height - 16px;
-        y: 8px;
-
-        moved => {
-            if (self.pressed) {
-                self.current-value = 1 - clamp(0, self.mouse-y / self.height, 1);
-                root.changed(self.current-value);
-            }
-        }
-
-        clicked => {
-            self.current-value = 1 - clamp(0, self.mouse-y / self.height, 1);
-            root.changed(self.current-value);
-        }
-    }
-}
-/*------Fim do Slider------*/
+// src/ui/slint/main.slint
+import { Slider } from "slider.slint";
+import { VolumeSlider } from "volume_control.slint";
 
 /*------Janela Principal------*/
 export component MainWindow inherits Window {
@@ -109,12 +10,12 @@ export component MainWindow inherits Window {
     // Properties
     in property <string> current-time: "00:00";
     in property <string> total-time: "00:00";
-    in property <bool> is-playing: false;
+    in property <bool> is-playing: true;
     in property <int> repeat-mode: 0;
     in property <float> progress: 0;
     in property <float> volume: 1.0;
-    in property <bool> is-muted: false;
-    in-out property <bool> volume-slider-visible: false;
+    in property <bool> is-muted: true;
+    in-out property <bool> volume-slider-visible: true;
 
     // Callbacks
     callback open-file-manager();
@@ -131,6 +32,7 @@ export component MainWindow inherits Window {
         height: parent.height;
         background: black;
         border-radius: 3px;
+
 
         VerticalLayout {
             width: parent.width;
@@ -156,7 +58,7 @@ export component MainWindow inherits Window {
                         background: transparent;
 
                         Image {
-                            source: @image-url("assets/playlist.svg");
+                            source: @image-url("../assets/playlist.svg");
                             width: 24px;
                             height: 24px;
                             horizontal-alignment: center;
@@ -176,7 +78,7 @@ export component MainWindow inherits Window {
                 background: transparent;
 
                 Image {
-                    source: @image-url("assets/music_player_icon_240x240.png");
+                    source: @image-url("../assets/music_player_icon_240x240.png");
                     width: 220px;
                     height: 220px;
                     horizontal-alignment: center;
@@ -245,7 +147,7 @@ export component MainWindow inherits Window {
                         border-radius: 5px;
 
                         Image {
-                            source: root.is-muted ? @image-url("assets/volume_off.svg") : root.volume > 0.5 ? @image-url("assets/volume_up.svg") : @image-url("assets/volume_down.svg");
+                            source: root.is-muted ? @image-url("../assets/volume_off.svg") : root.volume > 0.5 ? @image-url("../assets/volume_up.svg") : @image-url("../assets/volume_down.svg");
                             width: 24px;
                             height: 24px;
                             horizontal-alignment: center;
@@ -289,7 +191,7 @@ export component MainWindow inherits Window {
                             border-radius: 5px;
 
                             Image {
-                                source: @image-url("assets/skip_previous.svg");
+                                source: @image-url("../assets/skip_previous.svg");
                                 width: 24px;
                                 height: 24px;
                                 horizontal-alignment: center;
@@ -313,7 +215,7 @@ export component MainWindow inherits Window {
                             border-radius: 5px;
 
                             Image {
-                                source: @image-url("assets/play_circle.svg");
+                                source: @image-url("../assets/play_circle.svg");
                                 width: 24px;
                                 height: 24px;
                                 horizontal-alignment: center;
@@ -337,7 +239,7 @@ export component MainWindow inherits Window {
                             border-radius: 5px;
 
                             Image {
-                                source: @image-url("assets/skip_next.svg");
+                                source: @image-url("../assets/skip_next.svg");
                                 width: 24px;
                                 height: 24px;
                                 horizontal-alignment: center;
@@ -368,7 +270,7 @@ export component MainWindow inherits Window {
                         border-radius: 5px;
 
                         Image {
-                            source: @image-url("assets/refresh.svg");
+                            source: @image-url("../assets/refresh.svg");
                             width: 24px;
                             height: 24px;
                             horizontal-alignment: center;

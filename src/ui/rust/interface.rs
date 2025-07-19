@@ -1,38 +1,10 @@
-// src/ui/interface.rs
-use crate::audio::player::AudioPlayer;
-use slint::{ComponentHandle, TimerMode, Weak};
+// src/ui/rust/interface.rs
+use crate::audio::AudioPlayer;
+use slint::{ComponentHandle, TimerMode};
 use std::error::Error;
 use std::sync::{Arc, Mutex};
-//use std::thread;
 
 slint::include_modules!();
-
-/*------THREAD DE REPRODUÇÃO------*/
-// fn playing_thread(player: Arc<Mutex<AudioPlayer>>, main_window: Weak<MainWindow>) {
-//     thread::spawn(move || {
-//         while let Some(window) = main_window.upgrade() {
-//             if let Ok(player) = player.lock() {
-//                 let current_time = player.get_current_time();
-//                 let total_duration = player.get_total_duration();
-
-//                 let current_formatted = format_time(current_time);
-//                 let total_formatted = format_time(total_duration);
-
-//                 window.set_current_time(current_formatted.into());
-//                 window.set_total_time(total_formatted.into());
-
-//                 if total_duration > 0 {
-//                     let progress = current_time as f32 / total_duration as f32;
-//                     window.set_progress(progress);
-//                 }
-//             }
-//             thread::sleep(std::time::Duration::from_millis(1000));
-//         }
-//         println!("Thread de reprodução encerrada.");
-//     });
-// }
-
-/*------FIM DA THREAD DE REPRODUÇÃO------*/
 
 /*-------Função para a contagem de tempo------*/
 fn format_time(seconds: u64) -> String {
@@ -41,24 +13,6 @@ fn format_time(seconds: u64) -> String {
     format!("{:02}:{:02}", minutes, seconds)
 }
 /*-------FIM PARA A CONTAGEM DE TEMPO------*/
-
-/*------THREAD DOS CONTROLES------*/
-// pub fn buttons_thread(player: Arc<Mutex<AudioPlayer>>, main_window: Weak<MainWindow>) {
-//     thread::spawn(move || {
-//         while let Some(window) = main_window.upgrade() {
-//             if let Ok(player) = player.lock() {
-//                 window.set_is_playing(player.is_playing());
-//                 window.set_volume(player.get_volume() as f32);
-//                 window.set_is_muted(player.is_muted());
-//                 // window.set_playlist(player.playlist());
-//             }
-//             thread::sleep(std::time::Duration::from_millis(100));
-//         }
-//         println!("Thread dos botões encerrada.");
-//     });
-// }
-
-/*------FIM DA THREAD DOS CONTROLES------*/
 
 // Função para callbacks do Slint
 pub fn setup_callbacks(player: Arc<Mutex<AudioPlayer>>, main_window: &MainWindow) {
@@ -215,11 +169,6 @@ pub fn gui() -> Result<(), Box<dyn Error>> {
 
     // Configura os callbacks
     setup_callbacks(player.clone(), &main_window);
-
-    // Inicia as threads
-    //let window_handle = main_window.as_weak();
-    //buttons_thread(player.clone(), window_handle.clone());
-    //playing_thread(player.clone(), window_handle);
 
     main_window.run()?;
     Ok(())
